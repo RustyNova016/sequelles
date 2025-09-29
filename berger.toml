@@ -1,0 +1,17 @@
+[repository.sequelles]
+path="./"
+default_branch="master"
+
+    [repository.sequelles.rust]
+    fmt = true
+    clippy_hack = true
+    sqlx = false
+
+    [repository.sequelles.rust.ci]
+    fmt = true
+    clippy = true
+    test = true
+    nextest = false
+    msrv = true
+    machete = true
+    semver = true
