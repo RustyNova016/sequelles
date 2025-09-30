@@ -21,3 +21,6 @@ sqlx = { version = "0.8.2", features = ["runtime-tokio", "macros", ] }
 default = ["sqlite"]
 sqlite = ["dep:deadpool", "dep:bon", "dep:async-once-cell", "dep:snafu", "dep:futures", "sqlx/sqlite"]
 backtrace = ["snafu/backtrace"]
+
+[package.metadata.docs.rs]
+cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]
