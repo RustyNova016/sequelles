@@ -7,6 +7,7 @@ use crate::has_rowid::HasRowID;
 /// Represent a Many to Many join in the database.
 ///
 /// While it can be useful, prefer using [`ManyToZeroJoin`](crate::ManyToZeroJoin) or [`ZeroToManyJoin`] when possible, as they take less memory and promote less cloning
+#[derive(Debug, Clone)]
 pub struct ManyToManyJoin<L, R> {
     left_table: Table<L>,
     right_table: Table<R>,
@@ -20,12 +21,12 @@ where
     L: HasRowID,
     R: HasRowID,
 {
-    /// Add a new element to the left table
+    /// Add a new element to the left table. This overwrites any row already present with the same rowid
     pub fn add_left(&mut self, left: L) {
         self.left_table.insert(left);
     }
 
-    /// Add a new element to the right table
+    /// Add a new element to the right table. This overwrites any row already present with the same rowid
     pub fn add_right(&mut self, right: R) {
         self.right_table.insert(right);
     }
@@ -39,6 +40,13 @@ where
     /// Add a new relation between a left element and a right element
     pub fn add_relation(&mut self, left: &L, right: &R) {
         self.add_relation_ids(left.rowid(), right.rowid());
+    }
+
+    /// Add a new relation between a left element and a right element, while inserting them. If the rows are already added, they'll overwrite the inner data
+    pub fn add_relation_and_insert(&mut self, left: L, right: R) {
+        self.add_relation_ids(left.rowid(), right.rowid());
+        self.add_left(left);
+        self.add_right(right);
     }
 
     /// Remove a relation between a left element and a right element using their rowids
