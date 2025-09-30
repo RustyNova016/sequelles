@@ -2,6 +2,9 @@
 path="./"
 default_branch="master"
 
+    [repository.sequelles.release]
+    git_cliff = true
+
     [repository.sequelles.rust]
     fmt = true
     clippy_hack = true
@@ -14,4 +17,4 @@ default_branch="master"
     nextest = false
     msrv = true
     machete = true
-    semver = true
+    #semver = true <- Need nightly as well but break CI...
