@@ -123,6 +123,24 @@ where
     {
         into_many_to_zero(self.right_table, self.left_table, self.left_to_right)
     }
+
+    pub fn left_table(&self) -> &Table<L> {
+        &self.left_table
+    }
+
+    pub fn right_table(&self) -> &Table<R> {
+        &self.right_table
+    }
+
+    /// Return the mapping from one left id to its associated right ids
+    pub fn left_join_table(&self) -> &HashMap<i64, Vec<i64>> {
+        &self.left_to_right
+    }
+
+    /// Return the mapping from one right id to its associated left ids
+    pub fn right_join_table(&self) -> &HashMap<i64, Vec<i64>> {
+        &self.right_to_left
+    }
 }
 
 fn into_many_to_zero<L, R>(
