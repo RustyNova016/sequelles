@@ -4,6 +4,9 @@ use crate::Table;
 use crate::ZeroToManyJoin;
 use crate::has_rowid::HasRowID;
 
+pub mod entity;
+pub mod relations;
+
 /// Represent a Many to Many join in the database.
 ///
 /// While it can be useful, prefer using [`ManyToZeroJoin`](crate::ManyToZeroJoin) or [`ZeroToManyJoin`] when possible, as they take less memory and promote less cloning
@@ -49,20 +52,7 @@ where
         self.add_right(right);
     }
 
-    /// Remove a relation between a left element and a right element using their rowids
-    pub fn remove_relation_ids(&mut self, left: i64, right: i64) {
-        if let Some(left_vec) = self.left_to_right.get_mut(&left) {
-            left_vec.retain(|&x| x != right);
-        }
-        if let Some(right_vec) = self.right_to_left.get_mut(&right) {
-            right_vec.retain(|&x| x != left);
-        }
-    }
 
-    /// Remove a relation between a left element and a right element
-    pub fn remove_relation(&mut self, left: &L, right: &R) {
-        self.remove_relation_ids(left.rowid(), right.rowid());
-    }
 
     /// Get a left element by its rowid
     pub fn get_left(&self, key: &i64) -> Option<&L> {
@@ -141,6 +131,8 @@ where
     pub fn right_join_table(&self) -> &HashMap<i64, Vec<i64>> {
         &self.right_to_left
     }
+
+    
 }
 
 fn into_many_to_zero<L, R>(
@@ -187,3 +179,5 @@ impl<L, R> Default for ManyToManyJoin<L, R> {
         }
     }
 }
+
+
