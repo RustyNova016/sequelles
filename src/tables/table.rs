@@ -39,6 +39,10 @@ where
     pub fn iter(&self) -> std::collections::hash_map::Values<'_, i64, R> {
         self.0.values()
     }
+
+    pub fn contain_id(&self, id: &i64) -> bool {
+        self.0.contains_key(id)
+    }
 }
 
 impl<R> Default for Table<R> {
