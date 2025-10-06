@@ -1,3 +1,5 @@
+use core::ops::Deref;
+use core::ops::DerefMut;
 use std::collections::HashMap;
 use std::collections::hash_map::IntoValues;
 
@@ -84,5 +86,19 @@ impl<L, R> IntoIterator for ManyToZeroJoin<L, R> {
 
     fn into_iter(self) -> Self::IntoIter {
         self.0.into_iter()
+    }
+}
+
+impl<L, R> Deref for ManyToZeroJoin<L, R> {
+    type Target = RowIDMap<L, Option<R>>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl<L, R> DerefMut for ManyToZeroJoin<L, R> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
     }
 }
