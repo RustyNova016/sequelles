@@ -28,7 +28,6 @@ impl<R> JoinCollection<R> {
     }
 
     /// See [`Vec::is_empty`]
-
     pub fn is_empty(&self) -> bool {
         self.joins.is_empty()
     }
@@ -37,25 +36,6 @@ impl<R> JoinCollection<R> {
     ///
     /// This takes in a vec of the left values, then associate the right values contained in the [`JoinRelation`],
     /// using the [`JoinRelation::external_id`] field
-    ///
-    /// # Exemple
-    ///
-    /// ```
-    /// let listens = vec![1, 2];
-    /// let joins = JoinCollection::from(vec![
-    ///     JoinRelation {
-    ///         external_id: 1,
-    ///         data: (1, "Hello")
-    ///     },
-    ///     JoinRelation {
-    ///         external_id: 2,
-    ///         data: (1, "Hello")
-    ///     }
-    /// ]);
-    ///
-    /// let join = joins.into_many_to_zero(listens);
-    /// assert_eq!(join.get_by_id(1), (1, "Hello"));
-    /// ```
     pub fn into_many_to_zero<L, T>(self, left_elements: T) -> ManyToZeroJoin<L, R>
     where
         L: HasRowID,

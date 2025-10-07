@@ -1,6 +1,5 @@
-use std::backtrace::Backtrace;
-
 use async_once_cell::OnceCell;
+use snafu::Backtrace;
 use snafu::ResultExt as _;
 use snafu::Snafu;
 use sqlx::SqliteConnection;
