@@ -14,13 +14,12 @@ async-once-cell = { version = "0.5.4", optional = true }
 bon = { version = "3.7.2", optional = true }
 deadpool = { version = "0.12.3", optional = true, default-features = false, features = ["managed"] }
 futures = { version = "0.3.31", optional = true }
-snafu = { version = "0.8.9", optional = true, features = ["rust_1_81", "backtrace"] }
+snafu = { version = "0.8.9", optional = true, features = ["rust_1_81"] }
 sqlx = { version = "0.8.2", features = ["runtime-tokio", "macros", ] }
 
 [features]
 default = ["sqlite"]
 sqlite = ["dep:deadpool", "dep:bon", "dep:async-once-cell", "dep:snafu", "dep:futures", "sqlx/sqlite"]
-backtrace = ["snafu/backtrace"]
 
 [package.metadata.docs.rs]
 cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]

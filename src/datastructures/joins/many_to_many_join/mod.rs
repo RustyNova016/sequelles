@@ -6,7 +6,11 @@ use crate::has_rowid::HasRowID;
 
 /// Represent a Many to Many join in the database.
 ///
-/// While it can be useful, prefer using [`ManyToZeroJoin`](crate::ManyToZeroJoin) or [`ZeroToManyJoin`] when possible, as they take less memory and promote less cloning
+/// While it can be useful, prefer using [`ManyToZeroJoin`](crate::ManyToZeroJoin) or [`ZeroToManyJoin`] when possible,
+/// as they take less memory and promote less cloning.
+///
+/// # Exemple
+/// An artist can have many (0:N) recordings, but a recording can have many (0:N) artists.
 pub struct ManyToManyJoin<L, R> {
     left_table: Table<L>,
     right_table: Table<R>,

@@ -3,7 +3,7 @@ use std::collections::hash_map::IntoValues;
 
 use crate::has_rowid::HasRowID;
 
-/// A database table. This allow easy access to any item using its rowid
+/// This represent a database table. All the rows are indexed by rowid.
 pub struct Table<R>(HashMap<i64, R>);
 
 impl<R> Table<R>
