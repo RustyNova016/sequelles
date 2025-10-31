@@ -19,3 +19,4 @@ default_branch="master"
     msrv = true
     machete = true
     #semver = true <- Need nightly as well but break CI...
+

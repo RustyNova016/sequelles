@@ -4,6 +4,7 @@ use std::collections::hash_map::IntoValues;
 use crate::tables::traits::has_rowid::HasRowID;
 
 /// An hashmap that use the rowid of its "key" element as actual key, relieving it from the Eq + Hash requirement
+#[derive(Debug)]
 pub struct RowIDMap<K, V>(HashMap<i64, (K, V)>);
 
 impl<K, V> RowIDMap<K, V>

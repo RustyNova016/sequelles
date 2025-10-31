@@ -4,9 +4,11 @@ use std::collections::hash_map::IntoValues;
 use crate::RowIDMap;
 use crate::has_rowid::HasRowID;
 
+pub mod row;
 /// An [`crate::RowIDMap`] that represent a `LEFT JOIN`, where an element of the Left table <u>can</u> have <u>one</u> element of the Right table
 ///
 /// Example: a **Recording can have <u>many</u> Listens**, but a Listen <u>can</u> have a Recording
+#[derive(Debug)]
 pub struct ZeroToManyJoin<L, R>(pub(super) RowIDMap<Option<L>, Vec<R>>);
 
 impl<L, R> ZeroToManyJoin<L, R>
@@ -46,6 +48,10 @@ where
         self.as_mut_hash_map()
             .entry(key)
             .and_modify(|vals| vals.1.push(value));
+    }
+
+    pub fn as_hash_map(&self) -> &HashMap<i64, (Option<L>, Vec<R>)> {
+        self.0.as_hash_map()
     }
 
     pub fn as_mut_hash_map(&mut self) -> &mut HashMap<i64, (Option<L>, Vec<R>)> {
