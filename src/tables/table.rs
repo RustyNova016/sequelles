@@ -38,6 +38,14 @@ where
     pub fn iter(&self) -> std::collections::hash_map::Values<'_, i64, R> {
         self.0.values()
     }
+
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
 }
 
 impl<R> Default for Table<R> {

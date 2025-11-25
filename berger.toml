@@ -12,6 +12,7 @@ default_branch="master"
 
     [repository.sequelles.rust.ci]
     fmt = true
+    doc = true
     clippy = true
     test = true
     nextest = false

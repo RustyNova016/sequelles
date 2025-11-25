@@ -4,6 +4,7 @@ use crate::Table;
 use crate::ZeroToManyJoin;
 use crate::has_rowid::HasRowID;
 
+pub mod iterator;
 /// Represent a Many to Many join in the database.
 ///
 /// While it can be useful, prefer using [`ManyToZeroJoin`](crate::ManyToZeroJoin) or [`ZeroToManyJoin`] when possible,
