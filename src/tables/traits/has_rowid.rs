@@ -1,3 +1,8 @@
+#[cfg(feature = "chrono")]
+use chrono::DateTime;
+#[cfg(feature = "chrono")]
+use chrono::Utc;
+
 /// Trait for all row structs that have a row ID.
 /// This is a unique incremental integer above 0.
 ///
@@ -30,5 +35,12 @@ where
             Some(val) => val.rowid(),
             None => 0,
         }
+    }
+}
+
+#[cfg(feature = "chrono")]
+impl HasRowID for DateTime<Utc> {
+    fn rowid(&self) -> i64 {
+        self.timestamp()
     }
 }
