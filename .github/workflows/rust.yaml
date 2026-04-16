@@ -17,7 +17,7 @@ jobs:
   berger:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       # Install minimal toolchain
       - name: Install minimal stable toolchain
@@ -28,7 +28,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: Install cargo-berger for full suite testing
-        run: cargo install --git https://github.com/RustyNova016/cargo-berger --rev 5a56c3dae289b142885705c97e886a0c6f5c4a48
+        run: cargo install --git https://github.com/RustyNova016/cargo-berger --rev 5a56c3dae289b142885705c97e886a0c6f5c4a48 --locked
 
       - name: Install cargo-hack
         run: cargo +stable install cargo-hack --locked
@@ -47,3 +47,23 @@ jobs:
 
       - name: Run berger ci
         run: cargo-berger rust ci
+
+  # clippy:
+  #   env: 
+  #     SQLX_OFFLINE: true
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v6
+
+  #     # Install minimal toolchain
+  #     - name: Install minimal stable toolchain
+  #       uses: dtolnay/rust-toolchain@stable
+  #       with:
+  #         components: clippy
+
+  #     - uses: Swatinem/rust-cache@v2
+
+  #     - uses: taiki-e/install-action@cargo-hack
+
+  #     - name: Run clippy
+  #       run: cargo hack clippy --each-feature --skip hotpath,hotpath-alloc,hotpath-off -- -D warnings
