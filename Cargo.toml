@@ -10,14 +10,27 @@ keywords = ["sqlx", "database", "data-structure", "development"]
 repository = "https://github.com/RustyNova016/sequelles"
 
 [dependencies]
+# workspace
+sequelles_derive = {path = "./sequelles_derive"}
+
+# SQL
+sea-query = { version = "=1.0.0-rc.34", features = ["sqlx-utils"]}
+sqlx = { version = "0.8.0", features = ["runtime-tokio", "macros"]}
+sea-query-sqlx = { version = "0.8.0-rc.16" }
+
+# Async
 async-io = "2.6.0"
+
+# Other
 async-once-cell = { version = "0.5.4", optional = true }
 bon = { version = "3.7.2", optional = true }
 chrono = { version = "0.4.42", optional = true }
 deadpool = { version = "0.13.0", optional = true, default-features = false, features = ["managed"] }
 #futures = { version = "0.3.31", optional = true }
 snafu = { version = "0.9.0", optional = true, features = ["rust_1_81"] }
-sqlx = { version = "0.9.0", features = [] }
+
+[dev-dependencies]
+tokio = { version = "1.38.0", features = ["full"] }
 
 [dev-dependencies]
 macro_rules_attribute = "0.2.2"
@@ -28,7 +41,7 @@ filium = { git = "https://codeberg.org/RustyNova016/filium.git", rev = "535bbd41
 [features]
 default = ["sqlite"]
 chrono = ["dep:chrono"]
-sqlite = ["dep:deadpool", "dep:bon", "dep:async-once-cell", "dep:snafu", "sqlx/sqlite"]
+sqlite = ["dep:deadpool", "dep:bon", "dep:async-once-cell", "dep:snafu", "dep:futures", "sqlx/sqlite", "sea-query/sqlx-utils", "sea-query-sqlx/sqlx-sqlite"]
 
 migrate = ["sqlx/migrate"]
 
@@ -36,3 +49,12 @@ migrate = ["sqlx/migrate"]
 
 [package.metadata.docs.rs]
 cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]
+
+[workspace]
+members = ["./", "sequelles_derive"]
+
+[[example]]
+required-features = ["sqlite"]
+doc-scrape-examples = true
+name = "sqlite_orm"
+path = "examples/sqlite_orm/main.rs"
