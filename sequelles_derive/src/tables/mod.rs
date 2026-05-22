@@ -21,6 +21,7 @@ pub mod select;
 pub mod table_data;
 pub mod uindexes;
 pub mod update;
+pub mod pk;
 
 pub fn impl_hello_macro(item: TokenStream) -> TokenStream {
     // Parse into an AST

@@ -27,6 +27,11 @@ pub mod sea_query {
     pub use sea_query::*;
 }
 
+pub mod sea_query_sqlx {
+    pub use sea_query_sqlx::*;
+}
+
+
 pub mod sqlx {
     pub use sqlx::*;
 }

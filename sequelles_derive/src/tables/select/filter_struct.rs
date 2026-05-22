@@ -61,8 +61,8 @@ fn impl_select(table_data: &TableData) -> TokenStream {
                 conn: &mut sequelles::sqlx::SqliteConnection,
                 filter: #filter_struct_name,
             ) -> Result<Vec<Self>, sqlx::Error> {
-                use sea_query::ExprTrait as _;
-                use sea_query_sqlx::SqlxBinder as _;
+                use sequelles::sea_query::ExprTrait as _;
+                use sequelles::sea_query_sqlx::SqlxBinder as _;
 
                 let mut cond = sequelles::sea_query::Cond::all();
 
