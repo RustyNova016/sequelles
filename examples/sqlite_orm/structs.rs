@@ -1,6 +1,9 @@
-use sequelles::FromRow;
+use sequelles::Delete;
+use sequelles::Insert;
+use sequelles::Select;
 use sequelles::Table;
-use sqlx::Sqlite;
+use sequelles::Update;
+use sequelles::sqlx::FromRow;
 
 // Let's write our structs. Please note that you both need FromRow and Table.
 // sequelles::FromRow is just a re-export from sqlx ;)
@@ -34,8 +37,9 @@ pub struct Pie {
 }
 
 // Now for the other structs
-
-#[derive(Debug, FromRow, Table)]
+// Alternatively you can pick which derive macros to run.
+// The Table macro is just #[derive(Insert, Select, Update, Delete)]
+#[derive(Debug, FromRow, Update, Delete, Select, Insert)]
 #[sequelles(db_name = "toppings")]
 pub struct Topping {
     #[sequelles(pk, auto_increment)]

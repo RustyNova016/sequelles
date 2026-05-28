@@ -4,7 +4,7 @@ use quote::quote;
 
 use crate::tables::table_data::TableData;
 
-pub mod filter_struct;
+
 
 pub fn add_select(table_data: &TableData) -> TokenStream {
     let fields = table_data

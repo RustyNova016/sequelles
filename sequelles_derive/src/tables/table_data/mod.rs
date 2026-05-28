@@ -75,12 +75,4 @@ impl TableData {
     pub fn get_uindex_names(&self) -> impl Iterator<Item = &String> {
         self.fields.iter().flat_map(|f| f.uindexes.iter()).unique()
     }
-
-    pub fn get_insert_struct_name(&self) -> Ident {
-        Ident::new(&format!("{}Insert", self.struct_ident), Span::call_site())
-    }
-
-    pub fn get_filter_struct_name(&self) -> Ident {
-        Ident::new(&format!("{}Filter", self.struct_ident), Span::call_site())
-    }
 }

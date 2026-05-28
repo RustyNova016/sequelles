@@ -1,15 +1,22 @@
+use core::fmt::Display;
+
 use itertools::Itertools;
+use proc_macro2::Span;
 use proc_macro2::TokenStream;
 use quote::quote;
+use syn::Ident;
 
-use crate::tables::table_data::TableData;
+use crate::tables::table_data::field_data::FieldData;
 
-pub fn create_filter_struct(table_data: &TableData) -> TokenStream {
+pub fn create_filter_struct(
+    derived_struct: &Ident,
+    table_name: impl Display,
+    fields: &[&FieldData],
+) -> TokenStream {
     // Struct
-    let filter_struct_name = table_data.get_filter_struct_name();
+    let filter_struct_name = Ident::new(&format!("{derived_struct}Filter"), Span::call_site());
 
-    let struct_fields = table_data
-        .fields
+    let struct_fields = fields
         .iter()
         .map(|f| {
             let name = &f.field.ident;
@@ -23,7 +30,7 @@ pub fn create_filter_struct(table_data: &TableData) -> TokenStream {
         .collect_vec();
 
     // Impl
-    let select = impl_select(&table_data);
+    let select = impl_select(&derived_struct, &filter_struct_name, table_name, fields);
 
     quote! {
         #[derive(sequelles::bon::Builder)]
@@ -35,13 +42,15 @@ pub fn create_filter_struct(table_data: &TableData) -> TokenStream {
     }
 }
 
-fn impl_select(table_data: &TableData) -> TokenStream {
-    let for_struct = &table_data.struct_ident;
-    let db_name = &table_data.db_name;
-    let filter_struct_name = table_data.get_filter_struct_name();
+fn impl_select(
+    for_struct: &Ident,
+    filter_struct_name: &Ident,
+    table_name: impl Display,
+    fields: &[&FieldData],
+) -> TokenStream {
+    let table_name = table_name.to_string();
 
-    let field_conds = table_data
-        .fields
+    let field_conds = fields
         .iter()
         .map(|f| {
             let field_ident = &f.field.ident;
@@ -69,11 +78,11 @@ fn impl_select(table_data: &TableData) -> TokenStream {
                 #(#field_conds)*
 
                 let (sql, binds) = sequelles::sea_query::Query::select()
-                    .from(#db_name)
+                    .from(#table_name)
                     .cond_where(cond)
                     .build_sqlx(sequelles::sea_query::SqliteQueryBuilder);
 
-                sequelles::sqlx::query_as_with::<Sqlite, Self, _>(&sql, binds)
+                sequelles::sqlx::query_as_with::<sequelles::sqlx::Sqlite, Self, _>(&sql, binds)
                     .fetch_all(conn)
                     .await
             }

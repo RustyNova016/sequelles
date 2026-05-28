@@ -22,10 +22,11 @@ pub async fn inserts(conn: &mut sqlx::SqliteConnection) {
     let apple_pie = PieInsert::builder()
         .name("Apple pie")
         .barcode("123ThisIsNotEANCompliant!")
+        .price(5.25)
         .build();
 
     // Then... Insert. That's it!
-    let apple_pie = apple_pie.insert(conn).await.unwrap();
+    let apple_pie = apple_pie.insert(conn).await.unwrap().unwrap();
 
     // Let's add more data for our exemples
 
@@ -34,6 +35,7 @@ pub async fn inserts(conn: &mut sqlx::SqliteConnection) {
         .build()
         .insert(conn)
         .await
+        .unwrap()
         .unwrap();
 
     // You can also insert a table row directly
@@ -44,4 +46,8 @@ pub async fn inserts(conn: &mut sqlx::SqliteConnection) {
     .insert(conn)
     .await
     .unwrap();
+
+    // Beware that you want to keep the result of the insert, not the row. 
+    // This is simply because the database may edit the inserted row in triggers, or set defaults
+    // Also, if insertion fails, it will return a None in some sql dialects
 }

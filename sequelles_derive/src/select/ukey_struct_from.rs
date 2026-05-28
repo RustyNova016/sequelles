@@ -3,20 +3,19 @@ use proc_macro2::Ident;
 use proc_macro2::TokenStream;
 use quote::quote;
 
-use crate::tables::table_data::TableData;
 use crate::tables::table_data::field_data::FieldData;
 
-pub fn create_from(fields: &[&FieldData], struct_name: &Ident) -> TokenStream {
+pub fn ukey_from(fields: &[&FieldData], struct_name: &Ident) -> TokenStream {
     if fields.is_empty() {
         quote! {}
     } else if fields.len() == 1 {
-        create_from_value(fields.first().unwrap(), struct_name)
+        ukey_from_value(fields.first().unwrap(), struct_name)
     } else {
-        create_from_tupple(fields, struct_name)
+        ukey_from_tupple(fields, struct_name)
     }
 }
 
-fn create_from_value(field: &FieldData, struct_name: &Ident) -> TokenStream {
+fn ukey_from_value(field: &FieldData, struct_name: &Ident) -> TokenStream {
     let field = &field.field;
     let typ = &field.ty;
     let ident = &field.ident;
@@ -32,7 +31,7 @@ fn create_from_value(field: &FieldData, struct_name: &Ident) -> TokenStream {
     }
 }
 
-fn create_from_tupple(fields: &[&FieldData], struct_name: &Ident) -> TokenStream {
+fn ukey_from_tupple(fields: &[&FieldData], struct_name: &Ident) -> TokenStream {
     let fields_tuple = fields
         .iter()
         .map(|f| {
