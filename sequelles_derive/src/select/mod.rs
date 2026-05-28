@@ -28,8 +28,8 @@ pub fn select_macro_inner(table_data: &TableData) -> TokenStream {
             create_ukey_struct(
                 &table_data.struct_ident,
                 &table_data.db_name,
-                &ukey,
-                &table_data.get_fields_with_uindex(&ukey).collect_vec(),
+                ukey,
+                &table_data.get_fields_with_uindex(ukey).collect_vec(),
             )
         })
         .collect_vec();

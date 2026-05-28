@@ -30,7 +30,7 @@ pub fn create_filter_struct(
         .collect_vec();
 
     // Impl
-    let select = impl_select(&derived_struct, &filter_struct_name, table_name, fields);
+    let select = impl_select(derived_struct, &filter_struct_name, table_name, fields);
 
     quote! {
         #[derive(sequelles::bon::Builder)]

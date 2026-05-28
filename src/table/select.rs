@@ -3,7 +3,8 @@ where
     Self: Sized,
 {
     /// Select a row by a key
-    fn select_by_key(conn: C, filter: F) -> impl Future<Output = Result<Option<Self>, sqlx::Error>>;
+    fn select_by_key(conn: C, filter: F)
+    -> impl Future<Output = Result<Option<Self>, sqlx::Error>>;
 }
 
 pub trait Select<C, F>

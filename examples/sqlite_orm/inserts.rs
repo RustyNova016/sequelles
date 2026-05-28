@@ -47,7 +47,7 @@ pub async fn inserts(conn: &mut sqlx::SqliteConnection) {
     .await
     .unwrap();
 
-    // Beware that you want to keep the result of the insert, not the row. 
+    // Beware that you want to keep the result of the insert, not the row.
     // This is simply because the database may edit the inserted row in triggers, or set defaults
     // Also, if insertion fails, it will return a None in some sql dialects
 }

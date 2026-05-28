@@ -4,8 +4,6 @@ use quote::quote;
 
 use crate::tables::table_data::TableData;
 
-
-
 pub fn add_select(table_data: &TableData) -> TokenStream {
     let fields = table_data
         .get_fields_with_uindex("pk")
@@ -13,8 +11,11 @@ pub fn add_select(table_data: &TableData) -> TokenStream {
 
     let sql = format!(
         "SELECT * FROM `{}` WHERE {}",
-        table_data.struct_ident.to_string(),
-        table_data.get_fields_with_uindex("pk").map(|f| f.as_sql_binding()).join(" AND ")
+        table_data.struct_ident,
+        table_data
+            .get_fields_with_uindex("pk")
+            .map(|f| f.as_sql_binding())
+            .join(" AND ")
     );
 
     quote! {

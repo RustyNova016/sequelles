@@ -28,7 +28,7 @@ pub fn create_ukey_struct(
 
     let from = ukey_from(ukey_fields, &struct_name);
     let select = impl_select_trait(
-        &impl_struct,
+        impl_struct,
         &quote! {&mut sqlx::SqliteConnection},
         &struct_name,
         table_name,

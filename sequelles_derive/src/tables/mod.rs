@@ -23,12 +23,8 @@ pub fn impl_table_macro(item: TokenStream) -> TokenStream {
 
     // Build the macro
 
-
-
     let struct_name = &table_data.struct_ident;
     let pk_select = add_select(&table_data);
-
-
 
     let relations = create_relations(&table_data);
 

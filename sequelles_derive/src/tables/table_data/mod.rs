@@ -1,14 +1,13 @@
 use itertools::Itertools;
 use proc_macro2::Ident;
-use proc_macro2::Span;
 use syn::DeriveInput;
 
 use crate::tables::attributes::table_attribute::TableAtribute;
 use crate::tables::table_data::field_data::FieldData;
 
 pub mod field_data;
-pub mod unique_index;
 pub mod relation;
+pub mod unique_index;
 
 #[derive(Debug)]
 pub struct TableData {
@@ -37,7 +36,7 @@ impl TableData {
         let fields = ast
             .fields
             .iter_mut()
-            .map(|field| FieldData::parse(field))
+            .map(FieldData::parse)
             .collect_vec();
 
         Self {
@@ -51,25 +50,6 @@ impl TableData {
         self.fields
             .iter()
             .filter(|f| f.uindexes.contains(&uindex.to_string()))
-    }
-
-    /// Create a where filter for a specific unique index
-    pub fn get_unique_index_cond_sql(&self, uindex: &str) -> String {
-        format!(
-            "({})",
-            self.get_fields_with_uindex(uindex)
-                .map(|field| {
-                    let rust_name = field
-                        .field
-                        .ident
-                        .as_ref()
-                        .map(|i| i.to_string())
-                        .expect("Field should have an ident");
-
-                    format!("`{}` = {{{rust_name}}}", &field.db_name)
-                })
-                .join(", ")
-        )
     }
 
     pub fn get_uindex_names(&self) -> impl Iterator<Item = &String> {

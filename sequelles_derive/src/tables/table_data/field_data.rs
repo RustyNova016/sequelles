@@ -2,7 +2,6 @@ use proc_macro2::TokenStream;
 use quote::ToTokens;
 use quote::quote;
 use syn::Field;
-use syn::Ident;
 
 use crate::tables::attributes::ColumnAtribute;
 use crate::tables::table_data::relation::RelationData;
@@ -51,7 +50,7 @@ impl FieldData {
             uindexes,
             auto_increment: cattr.auto_increment,
             default: cattr.default,
-            relation
+            relation,
         }
     }
 
@@ -72,14 +71,6 @@ impl FieldData {
 
     pub fn as_sql_binding(&self) -> String {
         format!("`{}` = {{{}}}", &self.db_name, self.rust_name())
-    }
-
-    pub fn as_sql_self_binding(&self) -> String {
-        format!("`{}` = {{self.{}}}", &self.db_name, self.rust_name())
-    }
-
-    pub fn as_sql_filter_binding(&self) -> String {
-        format!("`{}` = {{filter.{}}}", &self.db_name, self.rust_name())
     }
 }
 

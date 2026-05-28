@@ -21,12 +21,12 @@ pub fn create_insert_struct(
         "A version of [{derived_struct}] that have default columns turned into options to let the database set the defaults itself."
     );
 
-    let struct_fields = fields.iter().map(|f| write_field(&*f)).collect_vec();
+    let struct_fields = fields.iter().map(|f| write_field(f)).collect_vec();
 
     let insert = impl_insert_trait(
         &struct_name,
         &quote! {&mut sqlx::SqliteConnection},
-        &derived_struct,
+        derived_struct,
         table_name,
         fields,
     );

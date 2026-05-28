@@ -1,4 +1,2 @@
 #[derive(Debug)]
-pub struct UIndexData {
-    
-}
+pub struct UIndexData {}

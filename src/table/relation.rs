@@ -1,3 +1,1 @@
-pub trait OneToManyRelation<One, Many> {
-    
-}
+pub trait OneToManyRelation<One, Many> {}

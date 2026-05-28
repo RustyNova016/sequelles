@@ -30,8 +30,8 @@ pub async fn selects(conn: &mut sqlx::SqliteConnection) {
         .unwrap()
         .unwrap();
 
-    // Alternatively, you can filter on any field using the filter struct. 
-    // Please note that this uses more ressources at runtime than a proper sql query, 
+    // Alternatively, you can filter on any field using the filter struct.
+    // Please note that this uses more ressources at runtime than a proper sql query,
     // so if you are hungry for perfomance, avoid using it and make an handwritten query instead
 
     let filter = PieFilter::builder().price(5.25).build();
