@@ -1,3 +1,4 @@
+use async_io::block_on;
 use async_once_cell::OnceCell;
 use snafu::Backtrace;
 use snafu::ResultExt as _;
@@ -28,8 +29,7 @@ impl SqliteDatabase {
             // Thanks Sqlx spaguetti.
             //
             // See: https://github.com/launchbadge/sqlx/issues/954#issuecomment-767080149
-            futures::executor::block_on(async { migrator.run(conn).await })
-                .context(MigrationSnafu)?
+            block_on(async { migrator.run(conn).await }).context(MigrationSnafu)?
         }
 
         Ok(pool)
