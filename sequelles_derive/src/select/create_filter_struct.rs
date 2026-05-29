@@ -78,11 +78,12 @@ fn impl_select(
                 #(#field_conds)*
 
                 let (sql, binds) = sequelles::sea_query::Query::select()
+                    .column(sequelles::sea_query::Asterisk)
                     .from(#table_name)
                     .cond_where(cond)
                     .build_sqlx(sequelles::sea_query::SqliteQueryBuilder);
 
-                sequelles::sqlx::query_as_with::<sequelles::sqlx::Sqlite, Self, _>(&sql, binds)
+                sequelles::sqlx::query_as_with::<sequelles::sqlx::Sqlite, Self, _>(sequelles::sqlx::AssertSqlSafe(sql), binds)
                     .fetch_all(conn)
                     .await
             }

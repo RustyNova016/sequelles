@@ -12,6 +12,7 @@ pub mod structs;
 
 #[tokio::main]
 pub async fn main() {
+    env_logger::init();
     let mut conn = SqliteConnection::connect("sqlite::memory:").await.unwrap();
 
     // To better follow this exemple, check the files in this order:

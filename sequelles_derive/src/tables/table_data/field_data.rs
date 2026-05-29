@@ -1,6 +1,4 @@
-use proc_macro2::TokenStream;
 use quote::ToTokens;
-use quote::quote;
 use syn::Field;
 
 use crate::tables::attributes::ColumnAtribute;
@@ -52,25 +50,6 @@ impl FieldData {
             default: cattr.default,
             relation,
         }
-    }
-
-    pub fn rust_name(&self) -> String {
-        self.field
-            .ident
-            .as_ref()
-            .map(|i| i.to_string())
-            .expect("Field should have an ident")
-    }
-
-    pub fn as_function_arg(&self) -> TokenStream {
-        let name = &self.field.ident;
-        let colon = &self.field.colon_token;
-        let typ = &self.field.ty;
-        quote! {#name #colon #typ}
-    }
-
-    pub fn as_sql_binding(&self) -> String {
-        format!("`{}` = {{{}}}", &self.db_name, self.rust_name())
     }
 }
 

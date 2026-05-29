@@ -3,20 +3,37 @@ use sequelles::SelectKey;
 
 use crate::structs::Pie;
 use crate::structs::PieFilter;
+use crate::structs::PiePk;
 use crate::structs::PieTopping;
+use crate::structs::PieToppingPk;
 use crate::structs::Topping;
 use crate::structs::ToppingName;
 use crate::structs::ToppingPk;
 
 pub async fn selects(conn: &mut sqlx::SqliteConnection) {
     // Selecting a row is simple
+    // Each unique key (Including the PK) has its own "[Table][Key]" struct. this allows selecting the proper key based on the type
+    // You can also create the Key struct by using Key::from, and giving a tupple with each values in order of definition
 
-    // By PK
-    let _apple_pie = Pie::select_by_pk(conn, 1).await.unwrap().unwrap();
-    let _apple_pie_topping = PieTopping::select_by_pk(conn, 1, 1).await.unwrap().unwrap();
+    // Pk
+    let _apple_pie = Pie::select_by_key(&mut *conn, PiePk::from(1))
+        .await
+        .unwrap()
+        .unwrap();
+    let _apple_pie_topping = PieTopping::select_by_key(
+        &mut *conn,
+        
+        PieToppingPk {
+            pie_id: 1,
+            topping_id: 1,
+        },
+    )
+    .await
+    .unwrap()
+    .unwrap();
 
     // By unique relation
-    // Each unique relation has its own "[Table]Key" struct. this allows selecting the proper key based on the type
+
     let name_filter = ToppingName::from("Apple".to_string());
     let _ = Topping::select_by_key(&mut *conn, name_filter)
         .await

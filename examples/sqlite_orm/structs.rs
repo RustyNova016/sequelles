@@ -6,7 +6,7 @@ use sequelles::Update;
 use sequelles::sqlx::FromRow;
 
 // Let's write our structs. Please note that you both need FromRow and Table.
-// sequelles::FromRow is just a re-export from sqlx ;)
+// sequelles::FromRow is just a re-export from sqlx 
 #[derive(Debug, FromRow, Table)]
 // Rename to use `pies` instead of `Pie`.
 // While not obligatory, it's good practice to make the row singular, and the table plural
@@ -23,7 +23,7 @@ pub struct Pie {
     // `description` is a TEXT -> String. Since it's nullable, we use an Option<>
     pub description: Option<String>,
 
-    // `id` is a NUMBER -> f64. However we want to rename it.
+    // `sell_price` is a NUMBER -> f64. However we want to rename it.
     // It also has a default. so we add default.
     // Please note that sequelles doesn't care about what the default is.
     // Because that's the database's job to set it. Not us.
