@@ -5,7 +5,7 @@ use quote::quote;
 use syn::Ident;
 
 use crate::macro_utils::generate_sql::insert::generate_insert_sql;
-use crate::tables::table_data::field_data::FieldData;
+use crate::macro_utils::table_definition::field_data::FieldData;
 
 pub(super) fn impl_insert_trait(
     for_type: &Ident,

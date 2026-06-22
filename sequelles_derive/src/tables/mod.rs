@@ -1,39 +1,44 @@
+pub mod unique_key;
+pub mod insert_struct;
 use proc_macro2::TokenStream;
 use quote::quote;
 
-use crate::delete::delete_macro_inner;
-use crate::insert::insert_macro_inner;
-use crate::select::select_macro_inner;
-use crate::tables::relations::create_relations;
-use crate::tables::table_data::TableData;
-use crate::update::update_macro_inner;
+use crate::models::database_data::StructData;
+use crate::tables::delete::impl_delete_trait;
+use crate::tables::insert::impl_insert_trait;
+use crate::tables::insert_struct::impl_insert_structs;
+use crate::tables::select::impl_select_trait;
+use crate::tables::unique_key::impl_unique_structs;
+use crate::tables::update::impl_update_trait;
 
-pub mod attributes;
-pub mod relations;
-pub mod table_data;
+pub mod delete;
+pub mod insert;
+pub mod select;
+pub mod update;
 
 pub fn impl_table_macro(item: TokenStream) -> TokenStream {
     // Parse into an AST
     let mut input = syn::parse2::<syn::DeriveInput>(item).unwrap();
 
     // Parse the table data
-    let table_data = TableData::parse(&mut input);
+    let table_data = StructData::parse_struct(&mut input);
 
     // Build the macro
-    let relations = create_relations(&table_data);
+    //let relations = create_relations(&table_data);
+    let delete = impl_delete_trait(&table_data);
+    let update = impl_update_trait(&table_data);
+    let insert = impl_insert_trait(&table_data);
+    let select = impl_select_trait(&table_data);
 
-    let insert = insert_macro_inner(&table_data);
-    let select = select_macro_inner(&table_data);
-    let update = update_macro_inner(&table_data);
-    let delete = delete_macro_inner(&table_data);
+    let insert_struct = impl_insert_structs(&table_data);
+    let unique_struct = impl_unique_structs(&table_data);
 
     quote! {
+        #delete
+        #update
         #insert
         #select
-        #update
-        #delete
-
-
-        #(#relations)*
+        #insert_struct
+        #unique_struct
     }
 }

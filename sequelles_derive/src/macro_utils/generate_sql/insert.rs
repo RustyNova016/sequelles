@@ -4,17 +4,20 @@ use itertools::Itertools;
 use proc_macro2::TokenStream;
 use quote::quote;
 
-use crate::tables::table_data::field_data::FieldData;
+use crate::macro_utils::table_definition::field_data::FieldData;
 
-pub fn generate_insert_sql(table_name: impl Display, fields: &[&FieldData]) -> TokenStream {
+pub fn generate_insert_sql(table_name: impl Display, table_fields: &[&FieldData]) -> TokenStream {
     let sql = format!(
         "INSERT INTO `{}` ({}) VALUES ({}) RETURNING *",
         table_name,
-        fields.iter().map(|f| format!("`{}`", f.db_name)).join(", "),
-        fields.iter().map(|_| String::from("?")).join(", ")
+        table_fields
+            .iter()
+            .map(|f| format!("`{}`", f.db_name))
+            .join(", "),
+        table_fields.iter().map(|_| String::from("?")).join(", ")
     );
 
-    let binds = fields.iter().map(|f| {
+    let binds = table_fields.iter().map(|f| {
         let f = &f.field.ident;
         quote! {.bind(&self.#f)}
     });

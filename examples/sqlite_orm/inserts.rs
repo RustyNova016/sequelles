@@ -1,4 +1,4 @@
-use sequelles::Insert;
+use sequelles::InsertOrIgnore;
 
 use crate::structs::PieInsert;
 use crate::structs::PieTopping;

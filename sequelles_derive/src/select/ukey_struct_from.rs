@@ -3,7 +3,7 @@ use proc_macro2::Ident;
 use proc_macro2::TokenStream;
 use quote::quote;
 
-use crate::tables::table_data::field_data::FieldData;
+use crate::macro_utils::table_definition::field_data::FieldData;
 
 pub fn ukey_from(fields: &[&FieldData], struct_name: &Ident) -> TokenStream {
     if fields.is_empty() {

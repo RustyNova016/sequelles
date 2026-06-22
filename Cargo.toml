@@ -42,8 +42,11 @@ filium = { git = "https://codeberg.org/RustyNova016/filium.git", rev = "535bbd41
 [features]
 default = ["sqlite"]
 chrono = ["dep:chrono"]
-sqlite = ["dep:deadpool", "dep:bon", "dep:async-once-cell", "dep:snafu", "sqlx/sqlite", "sea-query/sqlx-utils", "sea-query-sqlx/sqlx-sqlite"]
 sea_query = ["dep:sea-query", "dep:sea-query-sqlx"]
+
+# Database
+sqlite = ["dep:deadpool", "dep:bon", "dep:async-once-cell", "dep:snafu", "sqlx/sqlite", "sea-query/sqlx-utils", "sea-query-sqlx/sqlx-sqlite"]
+postgres = ["sqlx/postgres", "sea-query-sqlx/sqlx-postgres"]
 
 migrate = ["sqlx/migrate"]
 
@@ -53,10 +56,10 @@ migrate = ["sqlx/migrate"]
 cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]
 
 [workspace]
-members = ["./", "sequelles_derive"]
+members = ["./", "sequelles_derive", "sequelles_sql_gen"]
 
 [[example]]
-required-features = ["sqlite"]
+required-features = ["sqlite", "postgres"]
 doc-scrape-examples = true
 name = "sqlite_orm"
 path = "examples/sqlite_orm/main.rs"

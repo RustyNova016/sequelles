@@ -4,17 +4,17 @@ use proc_macro2::TokenStream;
 use quote::quote;
 use syn::Ident;
 
-use crate::macro_utils::generate_sql::select::generate_select_sql;
-use crate::tables::table_data::field_data::FieldData;
+use crate::macro_utils::generate_sql::select::generate_select_key_sql;
+use crate::macro_utils::table_definition::unique_key::UniqueKeyData;
 
 pub fn impl_select_trait(
     for_type: &Ident,
     for_conn: &TokenStream,
     with_filter: &Ident,
     table_name: impl Display,
-    unique_fields: &[&FieldData],
+    unique_key: &UniqueKeyData,
 ) -> TokenStream {
-    let sql = generate_select_sql(table_name, unique_fields);
+    let sql = generate_select_key_sql(table_name, unique_key);
 
     quote! {
         impl sequelles::SelectKey<#for_conn, #with_filter> for #for_type {

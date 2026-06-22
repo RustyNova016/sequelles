@@ -7,7 +7,7 @@ use quote::quote;
 use syn::Ident;
 
 use crate::insert::impl_insert_trait;
-use crate::tables::table_data::field_data::FieldData;
+use crate::macro_utils::table_definition::field_data::FieldData;
 
 pub fn create_insert_struct(
     derived_struct: &Ident,

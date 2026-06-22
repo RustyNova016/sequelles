@@ -6,7 +6,9 @@ use proc_macro2::TokenStream;
 use quote::quote;
 use syn::Ident;
 
-use crate::tables::table_data::field_data::FieldData;
+use crate::macro_utils::table_definition::field_data::FieldData;
+
+
 
 pub fn create_filter_struct(
     derived_struct: &Ident,

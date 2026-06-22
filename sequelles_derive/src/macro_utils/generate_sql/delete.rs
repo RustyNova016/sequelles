@@ -4,17 +4,18 @@ use itertools::Itertools;
 use proc_macro2::TokenStream;
 use quote::quote;
 
-use crate::tables::table_data::field_data::FieldData;
+use crate::macro_utils::table_definition::unique_key::UniqueKeyData;
 
-pub fn generate_delete_sql(table_name: impl Display, pk_fields: &[&FieldData]) -> TokenStream {
-    let delete_where = pk_fields
+pub fn generate_delete_sql(table_name: impl Display, primary_key: &UniqueKeyData) -> TokenStream {
+    let delete_where = primary_key
+        .fields
         .iter()
         .map(|field| format!("`{}` = ?", field.db_name))
         .join(" AND ");
 
     let sql = format!("DELETE FROM `{table_name}` WHERE {delete_where}",);
 
-    let binds = pk_fields.iter().map(|f| {
+    let binds = primary_key.fields.iter().map(|f| {
         let f = &f.field.ident;
         quote! {.bind(&self.#f)}
     });
