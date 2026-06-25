@@ -1,5 +1,3 @@
-use core::marker::PhantomData;
-
 use crate::models::dialects::PostgreSQLDialect;
 use crate::models::dialects::SqliteDialect;
 use crate::models::schema::field::field_collection::ColumnCollection;

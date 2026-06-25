@@ -26,6 +26,7 @@ pub struct StructData {
     pub gen_select_unique: bool,
     pub gen_insert: bool,
     pub gen_insert_struct: bool,
+    pub gen_upsert: bool,
 
     pub table: Table,
 }
@@ -56,6 +57,7 @@ impl StructData {
             gen_select_unique: tattr.select_unique,
             gen_insert_struct: tattr.insert_struct,
             gen_unique_keys: tattr.select_unique,
+            gen_upsert: tattr.upsert,
             postgres: tattr.postgres,
             sqlite: tattr.sqlite,
             struct_fields: fields,

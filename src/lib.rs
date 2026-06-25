@@ -19,6 +19,7 @@ pub use crate::table::relation::OneToMany;
 pub use crate::table::select::Select;
 pub use crate::table::select::SelectUnique;
 pub use crate::table::update::Update;
+pub use crate::table::upsert::Upsert;
 
 // pub use sequelles_derive::Delete;
 // pub use sequelles_derive::Insert;

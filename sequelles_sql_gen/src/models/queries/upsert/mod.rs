@@ -1,19 +1,23 @@
-use core::marker::PhantomData;
-
 use itertools::Itertools;
 
 use crate::models::dialects::PostgreSQLDialect;
+use crate::models::dialects::SqliteDialect;
 use crate::models::schema::field::field_collection::ColumnCollection;
 use crate::models::schema::unique_key::UniqueKey;
 use crate::models::sql_bind::SqlBinds;
 use crate::models::sql_statement::SqlStatement;
 
-pub struct Upsert<L> {
-    pub dialect: PhantomData<L>,
+pub trait HasUpsert {
+    fn upsert(
+        table_name: &str,
+        fields_to_insert: &ColumnCollection,
+        fields_to_update: &ColumnCollection,
+        conflict_keys: &[UniqueKey],
+    ) -> SqlStatement;
 }
 
-impl Upsert<PostgreSQLDialect> {
-    pub fn upsert(
+impl HasUpsert for PostgreSQLDialect {
+    fn upsert(
         table_name: &str,
         fields_to_insert: &ColumnCollection,
         fields_to_update: &ColumnCollection,
@@ -47,5 +51,40 @@ impl Upsert<PostgreSQLDialect> {
         );
 
         SqlStatement { sql, binds }
+    }
+}
+
+impl HasUpsert for SqliteDialect {
+    fn upsert(
+        table_name: &str,
+        fields_to_insert: &ColumnCollection,
+        fields_to_update: &ColumnCollection,
+        conflict_keys: &[UniqueKey],
+    ) -> SqlStatement {
+        let mut binds = SqlBinds::default();
+
+        let fields = fields_to_insert.as_sql_field_list();
+        let values = fields_to_insert.as_insert_binds::<SqliteDialect>(&mut binds);
+
+        let conflict_update = fields_to_update
+            .iter()
+            .map(|f| format!("{} = EXCLUDED.{}", f.sql_name, f.sql_name))
+            .join(", ");
+        let conflict_clauses = conflict_keys
+            .iter()
+            .map(|key| {
+                format!(
+                    "ON CONFLICT ({}) DO UPDATE SET {conflict_update}",
+                    key.fields.as_sql_field_list()
+                )
+            })
+            .join(" ");
+
+        SqlStatement {
+            sql: format!(
+                "INSERT INTO {table_name} ({fields}) VALUES {values} {conflict_clauses} RETURNING *"
+            ),
+            binds: binds,
+        }
     }
 }

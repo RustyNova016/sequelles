@@ -22,6 +22,8 @@ pub struct TableStructAtribute {
     pub select_unique: bool,
     #[deluxe(default)]
     pub insert_struct: bool,
+    #[deluxe(default)]
+    pub upsert: bool,
 
     #[deluxe(flatten)]
     pub table_data: TableAtribute,
@@ -35,7 +37,7 @@ pub struct TableAtribute {
     #[deluxe(default, append, alias = pk)]
     pub primary_key: Vec<TableUniqueKey>,
 
-    #[deluxe(default, append, alias = unique)]
+    #[deluxe(default, append, alias = unique, alias = unique_key)]
     pub unique_keys: Vec<TableUniqueKey>,
 
     #[deluxe(default, append, rename = foreign_key)]

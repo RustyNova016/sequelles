@@ -75,4 +75,8 @@ impl Table {
     pub fn iter_keys(&self) -> std::slice::Iter<'_, UniqueKey> {
         self.unique_keys.iter()
     }
+
+    pub fn unique_keys(&self) -> &Vec<UniqueKey> {
+        &self.unique_keys
+    }
 }

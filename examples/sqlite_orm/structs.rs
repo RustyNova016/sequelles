@@ -1,17 +1,12 @@
-use sequelles::Delete;
-use sequelles::InsertOrIgnore;
-use sequelles::Select;
 use sequelles::Table;
-use sequelles::Update;
 use sequelles::sqlx::FromRow;
-use sqlx::PgConnection;
 
 // Let's write our structs. Please note that you both need FromRow and Table.
 // sequelles::FromRow is just a re-export from sqlx
 #[derive(Debug, FromRow, Table)]
 ///
 // Select what you want to create (Opt-in for performance reasons)
-#[sequelles(delete, update, insert, select, insert_struct, select_unique)]
+#[sequelles(delete, update, insert, select, insert_struct, select_unique, upsert)]
 //
 // Select the databases to support
 #[sequelles(postgres, sqlite)]
@@ -22,7 +17,7 @@ use sqlx::PgConnection;
 //
 // Add the constraints
 #[sequelles(primary_key(key_name = "pk", columns(id)))]
-#[sequelles(primary_key(key_name = "unique_barcode", columns(barcode)))]
+#[sequelles(unique(key_name = "unique_barcode", columns(barcode)))]
 pub struct Pie {
     // Let's read the schema and translate it.
     // `id` is an integer -> i64. It is the primary key. It's an auto_increment value

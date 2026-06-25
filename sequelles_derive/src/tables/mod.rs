@@ -1,3 +1,4 @@
+pub mod upsert;
 pub mod unique_key;
 pub mod insert_struct;
 use proc_macro2::TokenStream;
@@ -10,6 +11,7 @@ use crate::tables::insert_struct::impl_insert_structs;
 use crate::tables::select::impl_select_trait;
 use crate::tables::unique_key::impl_unique_structs;
 use crate::tables::update::impl_update_trait;
+use crate::tables::upsert::impl_upsert_trait;
 
 pub mod delete;
 pub mod insert;
@@ -32,6 +34,7 @@ pub fn impl_table_macro(item: TokenStream) -> TokenStream {
 
     let insert_struct = impl_insert_structs(&table_data);
     let unique_struct = impl_unique_structs(&table_data);
+    let upsert = impl_upsert_trait(&table_data);
 
     quote! {
         #delete
@@ -40,5 +43,6 @@ pub fn impl_table_macro(item: TokenStream) -> TokenStream {
         #select
         #insert_struct
         #unique_struct
+        #upsert
     }
 }
