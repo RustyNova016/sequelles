@@ -4,7 +4,7 @@ use crate::models::sql_bind::SqlBinds;
 pub mod field_collection;
 
 /// A database field
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Column {
     pub sql_name: String,
     pub rust_name: String,

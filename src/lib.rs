@@ -1,3 +1,4 @@
+pub mod models;
 pub mod databases;
 pub mod datastructures;
 pub mod models;
@@ -20,6 +21,8 @@ pub use crate::table::select::Select;
 pub use crate::table::select::SelectUnique;
 pub use crate::table::update::Update;
 pub use crate::table::upsert::Upsert;
+pub use crate::table::selsert::Selsert;
+pub use crate::models::inserted_value::InsertedValue;
 
 // pub use sequelles_derive::Delete;
 // pub use sequelles_derive::Insert;
@@ -42,3 +45,6 @@ pub mod sea_query_sqlx {
 pub mod sqlx {
     pub use sqlx::*;
 }
+
+#[cfg(feature = "error_struct")]
+pub use snafu;

@@ -1,3 +1,4 @@
+pub mod selsert;
 pub mod delete;
 pub mod inserts;
 pub mod relation;

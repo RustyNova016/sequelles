@@ -33,7 +33,7 @@ where
     };
 
     SqlStatement {
-        sql: format!("INSERT INTO {table_name} ({fields}) VALUES {values} {conflict} RETURNING *"),
+        sql: format!("INSERT INTO {table_name} ({fields}) VALUES ({values}) {conflict} RETURNING *"),
         binds: binds,
     }
 }

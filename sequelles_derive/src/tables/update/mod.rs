@@ -8,6 +8,8 @@ use sequelles_sql_gen::models::queries::update::HasUpdate;
 use crate::macro_utils::generate_binds::generate_self_binds;
 use crate::models::database_data::StructData;
 use crate::models::sql_dialects::SqlxConnectionType;
+use crate::tables::error::get_error_type;
+use crate::tables::error::get_snafu_type;
 
 pub fn impl_update_trait(data: &StructData) -> TokenStream {
     if !data.gen_update {
@@ -37,7 +39,7 @@ where
 
     let sql_statement = L::update_by_unique_key(
         &data.table.get_table_identifier(),
-        &data.table.fields,
+        &data.table.iter_columns_not_in_pk().cloned().collect(),
         data.table
             .get_primary_key()
             .expect("Missing primary key for update"),
@@ -47,12 +49,22 @@ where
     let binds = generate_self_binds(&sql_statement.binds);
     let for_conn = L::get_mut_connection();
 
+    let context = get_snafu_type(data, "Update").map(|name| quote! {.context(#name)});
+    let error = get_error_type(data);
+
     quote! {
         impl sequelles::Update<#for_conn> for #for_struct {
-            async fn update(&self, conn: #for_conn) -> Result<Option<Self>, sqlx::Error> {
+            type Output = Self;
+            type Error = #error;
+
+            async fn update(&self, conn: #for_conn) -> Result<Option<Self>, Self::Error> {
+                use sequelles::snafu::ResultExt as _;
+
                 sequelles::sqlx::query_as(#sql)
                     #binds
-                    .fetch_optional(conn).await
+                    .fetch_optional(conn)
+                    .await
+                    #context
             }
         }
     }

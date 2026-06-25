@@ -1,23 +1,17 @@
-pub mod select_with_ukey;
-use convert_case::Case;
-use convert_case::Casing;
-use proc_macro2::Ident;
-use proc_macro2::Span;
 use proc_macro2::TokenStream;
 use quote::quote;
 use sequelles_sql_gen::models::schema::unique_key::UniqueKey;
 
 use crate::models::database_data::StructData;
+use crate::tables::unique_key::value_struct::create_ukey_struct::CreateUKeyStruct;
+use crate::tables::unique_key::value_struct::impl_get_key_function::ImplGetKeyFunction;
+
+pub mod create_ukey_struct;
+pub mod impl_get_key_function;
+pub mod select_with_ukey;
 
 pub fn create_value_struct(data: &StructData, ukey: &UniqueKey) -> TokenStream {
-    let struct_name = Ident::new(
-        &format!(
-            "{}{}",
-            data.struct_name,
-            ukey.name.to_string().to_case(Case::Pascal)
-        ),
-        Span::call_site(),
-    );
+    let key_struct_name = CreateUKeyStruct::get_struct_ident(data, ukey);
 
     let struct_doc = format!(
         "Represent the unique index `{}` for the table {}",
@@ -31,10 +25,15 @@ pub fn create_value_struct(data: &StructData, ukey: &UniqueKey) -> TokenStream {
         quote! {pub #name: #typ}
     });
 
+    let impl_get_key_func =
+        ImplGetKeyFunction::gen_impl(data, &ukey, &key_struct_name, &data.struct_name);
+
     quote! {
         #[doc = #struct_doc]
-        pub struct #struct_name {
+        pub struct #key_struct_name {
             #(#ukey_fields),*
         }
+
+        #impl_get_key_func
     }
 }

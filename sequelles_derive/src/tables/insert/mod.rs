@@ -8,6 +8,8 @@ use sequelles_sql_gen::models::queries::insert::HasInsert;
 use crate::macro_utils::generate_binds::generate_self_binds;
 use crate::models::database_data::StructData;
 use crate::models::sql_dialects::SqlxConnectionType;
+use crate::tables::error::get_error_type;
+use crate::tables::error::get_snafu_type;
 
 pub fn impl_insert_trait(data: &StructData) -> TokenStream {
     if !data.gen_insert {
@@ -41,14 +43,22 @@ where
     let binds = generate_self_binds(&sql_statement.binds);
     let for_conn = L::get_mut_connection();
 
-    quote! {
-        impl sequelles::InsertOrIgnore<#for_conn> for #for_struct {
-            type Output = Self;
+    let context = get_snafu_type(data, "Insert").map(|name| quote! {.context(#name)});
+    let error = get_error_type(data);
 
-            async fn insert_or_ignore(&self, conn: #for_conn) -> Result<Option<Self>, sqlx::Error> {
+    quote! {
+        impl sequelles::InsertOrIgnore<#for_conn> for &#for_struct {
+            type Output = #for_struct;
+            type Error = #error;
+
+            async fn insert_or_ignore(self, conn: #for_conn) -> Result<Option<Self::Output>, Self::Error> {
+                use sequelles::snafu::ResultExt as _;
+                
                 sequelles::sqlx::query_as(#sql)
                     #binds
-                    .fetch_optional(conn).await
+                    .fetch_optional(conn)
+                    .await
+                    #context
             }
         }
     }

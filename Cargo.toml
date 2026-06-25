@@ -48,6 +48,10 @@ sea_query = ["dep:sea-query", "dep:sea-query-sqlx"]
 sqlite = ["dep:deadpool", "dep:bon", "dep:async-once-cell", "dep:snafu", "sqlx/sqlite", "sea-query/sqlx-utils", "sea-query-sqlx/sqlx-sqlite"]
 postgres = ["sqlx/postgres", "sea-query-sqlx/sqlx-postgres"]
 
+# Macros
+error_struct = ["dep:snafu"]
+builder = ["dep:bon", "sequelles_derive/builder"]
+
 migrate = ["sqlx/migrate"]
 
 

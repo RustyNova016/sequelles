@@ -1,5 +1,3 @@
-
-
 use crate::models::dialects::PostgreSQLDialect;
 use crate::models::dialects::SqliteDialect;
 
@@ -18,6 +16,12 @@ impl SqlBinds {
         self.binds.push((num as u64, name));
         format!("${num}")
     }
+
+    pub fn create_ordered_bind(&mut self, name: String) -> String {
+        let num = self.binds.len() + 1;
+        self.binds.push((num as u64, name));
+        format!("?")
+    }
 }
 
 pub trait HasBinds {
@@ -32,6 +36,6 @@ impl HasBinds for PostgreSQLDialect {
 
 impl HasBinds for SqliteDialect {
     fn create_bind(binds: &mut SqlBinds, name: String) -> String {
-        binds.create_numbered_bind(name)
+        binds.create_ordered_bind(name)
     }
 }

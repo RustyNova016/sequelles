@@ -10,12 +10,13 @@ use sequelles_sql_gen::models::queries::select::HasSelectByKey;
 use sequelles_sql_gen::models::schema::unique_key::UniqueKey;
 
 use crate::macro_utils::generate_binds::generate_binds;
-use crate::macro_utils::generate_binds::generate_self_binds;
 use crate::models::database_data::StructData;
 use crate::models::sql_dialects::SqlxConnectionType;
+use crate::tables::error::get_error_type;
+use crate::tables::error::get_snafu_type;
 
 pub fn impl_select_unique_trait(data: &StructData, ukey: &UniqueKey) -> TokenStream {
-    if !data.gen_select {
+    if !data.gen_select_unique {
         return quote! {};
     }
 
@@ -55,15 +56,25 @@ where
     let binds = generate_binds(&quote! {filter}, &sql_statement.binds);
     let for_conn = L::get_mut_connection();
 
+        let context = get_snafu_type(data, "SelectUnique").map(|name| quote! {.context(#name)});
+    let error = get_error_type(data);
+
     quote! {
         impl sequelles::SelectUnique<#for_conn, #filter_struct_name> for #for_struct {
+            type Output = Self;
+            type Error = #error;
+
             async fn select_unique(
                 conn: #for_conn,
                 filter: #filter_struct_name,
-            ) -> Result<Option<Self>, sqlx::Error> {
+            ) -> Result<Option<Self>, Self::Error> {
+                use sequelles::snafu::ResultExt as _;
+                
                 sequelles::sqlx::query_as(#sql)
                     #binds
-                    .fetch_optional(conn).await
+                    .fetch_optional(conn)
+                    .await
+                    #context
             }
         }
     }

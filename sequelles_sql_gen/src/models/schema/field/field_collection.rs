@@ -76,4 +76,14 @@ impl ColumnCollection {
             .map(|f| L::create_bind(binds, f.rust_name.clone()))
             .join(", ")
     }
+
+    pub fn as_vec(&self) -> &Vec<Rc<Column>> {
+        &self.0
+    }
+}
+
+impl FromIterator<Rc<Column>> for ColumnCollection {
+    fn from_iter<T: IntoIterator<Item = Rc<Column>>>(iter: T) -> Self {
+        Self(iter.into_iter().collect_vec())
+    }
 }

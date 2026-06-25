@@ -6,13 +6,20 @@ use quote::quote;
 use syn::Field;
 
 use crate::models::database_data::StructData;
-use crate::tables::insert::impl_insert_trait;
+
+pub struct CreateInsertStruct;
+
+impl CreateInsertStruct {
+    pub fn get_struct_ident(data: &StructData) -> Ident {
+        Ident::new(&format!("{}Insert", &data.struct_name), Span::call_site())
+    }
+}
 
 pub fn create_insert_struct(data: &StructData) -> TokenStream {
     // Struct
     let struct_name = Ident::new(&format!("{}Insert", &data.struct_name), Span::call_site());
     let struct_doc = format!(
-        "A version of [{}] that have default columns turned into options to let the database set the defaults itself.",
+        "A version of [{}] that have default columns turned into [sequelles::InsertedValue] to let the database set the defaults itself.",
         data.struct_name
     );
 
@@ -22,12 +29,24 @@ pub fn create_insert_struct(data: &StructData) -> TokenStream {
         .map(|f| write_field(f, data))
         .collect_vec();
 
+    let get_key_funcs = CreateInsertStruct::gen_get_key_funcs(data);
+    let selsert = CreateInsertStruct::impl_selsert_trait(data);
+    let from_row = CreateInsertStruct::impl_from_row_struct(
+        &data.struct_name,
+        &struct_name,
+        &data.struct_fields,
+    );
+
     quote! {
         #[doc = #struct_doc]
         #[derive(sequelles::bon::Builder)]
         pub struct #struct_name {
             #(#struct_fields),*
         }
+
+        #get_key_funcs
+        #selsert
+        #from_row
     }
 }
 

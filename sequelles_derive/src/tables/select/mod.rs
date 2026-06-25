@@ -8,6 +8,8 @@ use sequelles_sql_gen::models::dialects::SqliteDialect;
 
 use crate::models::database_data::StructData;
 use crate::models::sql_dialects::SqlxConnectionType;
+use crate::tables::error::get_error_type;
+use crate::tables::error::get_snafu_type;
 use crate::tables::select::filter_struct::create_filter_struct;
 
 pub(super) mod filter_struct;
@@ -60,14 +62,21 @@ where
         })
         .collect_vec();
 
+    let context = get_snafu_type(data, "Select").map(|name| quote! {.context(#name)});
+    let error = get_error_type(data);
+
     quote! {
         impl sequelles::Select<#for_conn, #filter_struct_name> for #for_struct {
+            type Output = Self;
+            type Error = #error;
+
             async fn select(
                 conn: #for_conn,
                 filter: #filter_struct_name,
-            ) -> Result<Vec<Self>, sqlx::Error> {
+            ) -> Result<Vec<Self>, Self::Error> {
                 use sequelles::sea_query::ExprTrait as _;
                 use sequelles::sea_query_sqlx::SqlxBinder as _;
+                use sequelles::snafu::ResultExt as _;
 
                 let mut cond = sequelles::sea_query::Cond::all();
 
@@ -82,6 +91,7 @@ where
                 sequelles::sqlx::query_as_with::<#for_db, Self, _>(sequelles::sqlx::AssertSqlSafe(sql), binds)
                     .fetch_all(conn)
                     .await
+                    #context
             }
         }
     }

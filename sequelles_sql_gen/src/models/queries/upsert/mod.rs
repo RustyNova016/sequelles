@@ -82,7 +82,7 @@ impl HasUpsert for SqliteDialect {
 
         SqlStatement {
             sql: format!(
-                "INSERT INTO {table_name} ({fields}) VALUES {values} {conflict_clauses} RETURNING *"
+                "INSERT INTO {table_name} ({fields}) VALUES ({values}) {conflict_clauses} RETURNING *"
             ),
             binds: binds,
         }

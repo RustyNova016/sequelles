@@ -21,9 +21,17 @@ pub struct TableStructAtribute {
     #[deluxe(default)]
     pub select_unique: bool,
     #[deluxe(default)]
-    pub insert_struct: bool,
+    pub insert_struct: bool,    
+    #[deluxe(default)]
+    pub dyn_insert_struct: bool,
     #[deluxe(default)]
     pub upsert: bool,
+    #[deluxe(default)]
+    pub selsert: bool,
+
+    // Extras
+    #[deluxe(default)]
+    pub snafu: bool,
 
     #[deluxe(flatten)]
     pub table_data: TableAtribute,

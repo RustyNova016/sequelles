@@ -25,4 +25,8 @@ impl UniqueKey {
     {
         self.fields.as_sql_where::<L>(binds)
     }
+
+    pub fn has_default_column(&self) -> bool {
+        self.fields.iter().any(|col| col.auto_increment || col.default)
+    }
 }

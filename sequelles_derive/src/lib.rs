@@ -30,6 +30,8 @@ mod tables;
 /// - update: Generate update
 /// - delete: Generate delete
 /// 
+/// - snafu: Use typed snafu errors instead of sqlx::Error 
+/// 
 /// # Field attributes
 /// ## Table data
 /// - default: the column as a default value

@@ -79,4 +79,21 @@ impl Table {
     pub fn unique_keys(&self) -> &Vec<UniqueKey> {
         &self.unique_keys
     }
+
+    pub fn iter_columns_not_in_pk(&self) -> impl Iterator<Item = &Rc<Column>> {
+        self.fields.iter().filter(|field| {
+            self.get_primary_key()
+                .is_some_and(|pk| pk.fields.as_vec().contains(*field))
+        })
+    }
+
+    pub fn iter_default_columns(&self) -> impl Iterator<Item = &Rc<Column>> {
+        self.fields.iter().filter(|f| f.auto_increment || f.default)
+    }
+
+    pub fn iter_non_default_columns(&self) -> impl Iterator<Item = &Rc<Column>> {
+        self.fields
+            .iter()
+            .filter(|f| !f.auto_increment && !f.default)
+    }
 }

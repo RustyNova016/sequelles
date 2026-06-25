@@ -6,7 +6,17 @@ use sequelles::sqlx::FromRow;
 #[derive(Debug, FromRow, Table)]
 ///
 // Select what you want to create (Opt-in for performance reasons)
-#[sequelles(delete, update, insert, select, insert_struct, select_unique, upsert)]
+#[sequelles(
+    delete,
+    update,
+    insert,
+    select,
+    insert_struct,
+    dyn_insert_struct,
+    select_unique,
+    upsert,
+    selsert
+)]
 //
 // Select the databases to support
 #[sequelles(postgres, sqlite)]
@@ -14,6 +24,9 @@ use sequelles::sqlx::FromRow;
 // Rename to use `pies` instead of `Pie`.
 // While not obligatory, it's good practice to make the row singular, and the table plural
 #[sequelles(db_name = "pies")]
+//
+// Add snafu
+#[sequelles(snafu)]
 //
 // Add the constraints
 #[sequelles(primary_key(key_name = "pk", columns(id)))]
@@ -42,6 +55,8 @@ pub struct Pie {
     //#[sequelles(unique)]
     pub barcode: String,
 }
+
+
 // // Alternatively you can pick which derive macros to run.
 // // The Table macro is just #[derive(Insert, Select, Update, Delete)]
 // #[derive(Debug, FromRow, Update, Delete, Select, Insert)]
