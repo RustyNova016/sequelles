@@ -1,5 +1,6 @@
 pub mod databases;
 pub mod datastructures;
+pub mod models;
 pub mod tables;
 
 pub use crate::datastructures::rowid_map::RowIDMap;
