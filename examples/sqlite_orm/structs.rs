@@ -71,7 +71,7 @@ pub struct Topping {
 
 #[derive(Debug, FromRow, Table)]
 #[sequelles(db_name = "pie_toppings")]
-#[sequelles(insert)]
+#[sequelles(insert, select_unique)]
 #[sequelles(postgres, sqlite)]
 // You can declare multi columns primary keys like so:
 #[sequelles(primary_key(key_name = "pk", columns(pie_id), columns(topping_id)))]
