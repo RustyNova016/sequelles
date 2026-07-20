@@ -2,11 +2,11 @@ use smol_macros::main;
 use sqlx::Connection;
 use sqlx::SqliteConnection;
 
-// use crate::inserts::inserts;
+use crate::inserts::inserts;
 use crate::schema::generate_database;
 // use crate::selects::selects;
 
-// pub mod inserts;
+pub mod inserts;
 pub mod schema;
 // pub mod selects;
 pub mod structs;
@@ -24,7 +24,7 @@ async fn main() {
     // structs.rs
 
     // inserts.rs
-    // inserts(&mut conn).await;
+    inserts(&mut conn).await;
 
     // selects.rs
     // selects(&mut conn).await;

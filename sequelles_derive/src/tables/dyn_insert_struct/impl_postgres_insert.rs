@@ -84,7 +84,7 @@ where
 }
 
 fn gen_hard_column_list(data: &StructData) -> TokenStream {
-    let list = data.table.fields.iter().map(|f| &f.sql_name).collect_vec();
+    let list = data.table.iter_non_default_columns().map(|f| &f.sql_name).collect_vec();
 
     quote! {vec![ #(#list),* ]}
 }

@@ -5,7 +5,7 @@ use sequelles::sqlx::FromRow;
 // sequelles::FromRow is just a re-export from sqlx
 #[derive(Debug, FromRow, Table)]
 ///
-// Select what you want to create (Opt-in for performance reasons)
+// Select what sql you want to generate (Opt-in for performance reasons). All the possible velues are here:
 #[sequelles(
     delete,
     update,
@@ -25,7 +25,7 @@ use sequelles::sqlx::FromRow;
 // While not obligatory, it's good practice to make the row singular, and the table plural
 #[sequelles(db_name = "pies")]
 //
-// Add snafu
+// Add snafu for better errors
 #[sequelles(snafu)]
 //
 // Add the constraints
@@ -48,7 +48,7 @@ pub struct Pie {
     // Please note that sequelles doesn't care about what the default is.
     // Because that's the database's job to set it. Not us.
     #[sqlx(rename = "sell_price")]
-    //#[sequelles(db_name = "sell_price", default)]
+    #[sequelles(db_name = "sell_price", default)]
     pub price: f64,
 
     // The barcode is unique. So we mark it as such
@@ -56,32 +56,29 @@ pub struct Pie {
     pub barcode: String,
 }
 
+#[derive(Debug, FromRow, Table)]
+#[sequelles(db_name = "toppings")]
+#[sequelles(insert_struct)]
+#[sequelles(postgres, sqlite)]
+#[sequelles(primary_key(key_name = "pk", columns(id)))]
+#[sequelles(unique(key_name = "unique_name", columns(name)))]
+pub struct Topping {
+    // `pk` is a shorthand for `primary_key` if you're lazy
+    #[sequelles(auto_increment)]
+    pub id: i64,
+    pub name: String,
+}
 
-// // Alternatively you can pick which derive macros to run.
-// // The Table macro is just #[derive(Insert, Select, Update, Delete)]
-// #[derive(Debug, FromRow, Update, Delete, Select, Insert)]
-// #[sequelles(db_name = "toppings")]
-// pub struct Topping {
-//     // `pk` is a shorthand for `primary_key` if you're lazy
-//     #[sequelles(pk, auto_increment)]
-//     pub id: i64,
-
-//     #[sequelles(unique)]
-//     pub name: String,
-// }
-
-// #[derive(Debug, FromRow, Table)]
-// #[sequelles(db_name = "pie_toppings")]
-// // You can declare multi columns primary keys like so:
-// #[sequelles(primary_key(pie_id, topping_id))] // Wow just like SQL!
-// pub struct PieTopping {
-//     #[sequelles(references = "pies", with_row = Pie)]
-//     pub pie_id: i64,
-
-//     // You can declare multiple field as PK for composite keys
-//     #[sequelles(references = "toppings", with_row = Topping)]
-//     pub topping_id: i64,
-// }
+#[derive(Debug, FromRow, Table)]
+#[sequelles(db_name = "pie_toppings")]
+#[sequelles(insert)]
+#[sequelles(postgres, sqlite)]
+// You can declare multi columns primary keys like so:
+#[sequelles(primary_key(key_name = "pk", columns(pie_id), columns(topping_id)))]
+pub struct PieTopping {
+    pub pie_id: i64,
+    pub topping_id: i64,
+}
 
 // #[derive(Debug, FromRow, Table)]
 // #[sequelles(db_name = "baked_pies")]

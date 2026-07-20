@@ -19,7 +19,7 @@ pub async fn generate_database(conn: &mut sqlx::SqliteConnection) {
             -- What toppings the pie has
             CREATE TABLE `pie_toppings` (
                 `pie_id` INTEGER NOT NULL REFERENCES `pies`(`id`),
-                `topping_id` INTEGER NOT NULL UNIQUE REFERENCES `toppings`(`id`),
+                `topping_id` INTEGER NOT NULL UNIQUE REFERENCES `toppings`(`id`)
             );
 
             -- Record the date a pie got baked
@@ -32,7 +32,7 @@ pub async fn generate_database(conn: &mut sqlx::SqliteConnection) {
 
             -- Holds the shipment data
             CREATE TABLE `shipment` (
-                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
             );
 
             -- Associate the baked_pies to their shipments
@@ -41,7 +41,7 @@ pub async fn generate_database(conn: &mut sqlx::SqliteConnection) {
                 `baking_date` DATE NOT NULL,
                 `shipment_id` INTEGER NOT NULL REFERENCES `shipment` (`id`),
 
-                PRIMARY KEY (`pie_id`, `baking_date`, `shipment_id`)
+                PRIMARY KEY (`pie_id`, `baking_date`, `shipment_id`),
                 FOREIGN KEY (`pie_id`, `baking_date`) REFERENCES `baked_pies` (`pie_id`, `baking_date`)
             );
         ",
