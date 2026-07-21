@@ -83,7 +83,7 @@ impl Table {
     pub fn iter_columns_not_in_pk(&self) -> impl Iterator<Item = &Rc<Column>> {
         self.fields.iter().filter(|field| {
             self.get_primary_key()
-                .is_some_and(|pk| pk.fields.as_vec().contains(*field))
+                .is_some_and(|pk| !pk.fields.as_vec().contains(*field))
         })
     }
 

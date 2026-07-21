@@ -1,3 +1,4 @@
+
 /// Let's create the database. This is standard sqlx, altough it would be better to use a migration.
 pub async fn generate_database(conn: &mut sqlx::SqliteConnection) {
     sqlx::query(

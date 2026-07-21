@@ -5,11 +5,13 @@ use sqlx::SqliteConnection;
 use crate::inserts::inserts;
 use crate::schema::generate_database;
 use crate::selects::selects;
+use crate::updates::updates;
 
 pub mod inserts;
 pub mod schema;
 pub mod selects;
 pub mod structs;
+pub mod updates;
 
 main! {
 async fn main() {
@@ -28,5 +30,8 @@ async fn main() {
 
     // selects.rs
     selects(&mut conn).await;
+
+    // Update.rs
+    updates(&mut conn).await;
 }
 }
