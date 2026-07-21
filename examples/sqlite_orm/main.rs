@@ -2,11 +2,13 @@ use smol_macros::main;
 use sqlx::Connection;
 use sqlx::SqliteConnection;
 
+use crate::deletes::deletes;
 use crate::inserts::inserts;
 use crate::schema::generate_database;
 use crate::selects::selects;
 use crate::updates::updates;
 
+pub mod deletes;
 pub mod inserts;
 pub mod schema;
 pub mod selects;
@@ -31,7 +33,10 @@ async fn main() {
     // selects.rs
     selects(&mut conn).await;
 
-    // Update.rs
+    // update.rs
     updates(&mut conn).await;
+
+    // deletes.rs
+    deletes(&mut conn).await;
 }
 }

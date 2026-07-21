@@ -58,7 +58,7 @@ pub struct Pie {
 
 #[derive(Debug, FromRow, Table)]
 #[sequelles(db_name = "toppings")]
-#[sequelles(insert_struct)]
+#[sequelles(insert_struct, delete)]
 #[sequelles(postgres, sqlite)]
 #[sequelles(primary_key(key_name = "pk", columns(id)))]
 #[sequelles(unique(key_name = "unique_name", columns(name)))]
