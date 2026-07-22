@@ -14,7 +14,7 @@ use crate::tables::error::get_snafu_type;
 
 impl CreateDynInsertableStruct {
     pub(super) fn create_impl_inserts(data: &StructData) -> TokenStream {
-        if !data.gen_insert_struct {
+        if !data.gen_dyn_insert_struct {
             return quote! {};
         }
 

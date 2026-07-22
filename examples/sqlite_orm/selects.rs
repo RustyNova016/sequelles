@@ -13,10 +13,9 @@ pub async fn selects(conn: &mut sqlx::SqliteConnection) {
     // -------------------------------------------------------------------------------------------------------------------------------------------
     //
     // Unique rows (#[sequelles(select_unique)])
-
+    //
     // Each unique key (Including the PK) has its own "{Row}{Key}" struct. This allows filtering to get a specific row.
 
-    // Pk
     let _apple_pie_topping = PieTopping::select_unique(
         &mut *conn,
         PieToppingPk {

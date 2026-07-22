@@ -20,13 +20,11 @@ sea-query-sqlx = { version = "0.9.0", optional = true  }
 
 # Async
 async-io = "2.6.0"
+async-once-cell = { version = "0.5.4", optional = true }
 
 # Other
-async-once-cell = { version = "0.5.4", optional = true }
 bon = { version = "3.7.2", optional = true }
-chrono = { version = "0.4.42", optional = true }
 deadpool = { version = "0.13.0", optional = true, default-features = false, features = ["managed"] }
-#futures = { version = "0.3.31", optional = true }
 snafu = { version = "0.9.0", optional = true, features = ["rust_1_81"] }
 
 [dev-dependencies]
@@ -40,12 +38,15 @@ filium = { git = "https://codeberg.org/RustyNova016/filium.git", rev = "535bbd41
 
 [features]
 default = ["sqlite"]
-chrono = ["dep:chrono"]
 sea_query = ["dep:sea-query", "dep:sea-query-sqlx"]
 
 # Database
 sqlite = ["dep:deadpool", "dep:bon", "dep:async-once-cell", "dep:snafu", "sqlx/sqlite", "sea-query/sqlx-utils", "sea-query-sqlx/sqlx-sqlite"]
 postgres = ["sqlx/postgres", "sea-query-sqlx/sqlx-postgres"]
+
+# Database types
+chrono = ["sqlx/chrono", "sea-query/with-chrono"]
+uuid = ["sqlx/uuid", "sea-query/with-uuid"]
 
 # Runtimes
 runtime-tokio = ["sqlx/runtime-tokio"]
