@@ -15,7 +15,7 @@ sequelles_derive = {path = "./sequelles_derive"}
 
 # SQL
 sea-query = { version = "1.0.0", optional = true , features = ["sqlx-utils"]}
-sqlx = { version = "0.9.0", features = ["macros"]}
+sqlx = { version = "0.9.1", features = ["macros"]}
 sea-query-sqlx = { version = "0.9.0", optional = true  }
 
 # Async
@@ -26,6 +26,7 @@ async-once-cell = { version = "0.5.4", optional = true }
 bon = { version = "3.7.2", optional = true }
 deadpool = { version = "0.13.0", optional = true, default-features = false, features = ["managed"] }
 snafu = { version = "0.9.0", optional = true, features = ["rust_1_81"] }
+chrono = { version = "0.4.45", optional = true }
 
 [dev-dependencies]
 tokio = { version = "1.38.0", features = ["full"] }
@@ -37,7 +38,7 @@ filium = { git = "https://codeberg.org/RustyNova016/filium.git", rev = "535bbd41
 
 
 [features]
-default = ["sqlite"]
+default = []
 sea_query = ["dep:sea-query", "dep:sea-query-sqlx"]
 
 # Database
@@ -45,8 +46,8 @@ sqlite = ["dep:deadpool", "dep:bon", "dep:async-once-cell", "dep:snafu", "sqlx/s
 postgres = ["sqlx/postgres", "sea-query-sqlx/sqlx-postgres"]
 
 # Database types
-chrono = ["sqlx/chrono", "sea-query/with-chrono"]
-uuid = ["sqlx/uuid", "sea-query/with-uuid"]
+chrono = ["sqlx/chrono", "sea-query/with-chrono", "sea-query-sqlx/with-chrono", "dep:chrono"]
+uuid = ["sqlx/uuid", "sea-query/with-uuid", "sea-query-sqlx/with-uuid"]
 
 # Runtimes
 runtime-tokio = ["sqlx/runtime-tokio"]
@@ -67,7 +68,7 @@ cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]
 members = ["./", "sequelles_derive", "sequelles_sql_gen"]
 
 [[example]]
-required-features = ["sqlite", "postgres", "runtime-smol", "error_struct"]
+required-features = ["sqlite", "runtime-smol", "error_struct", "chrono", "postgres"]
 doc-scrape-examples = true
 name = "sqlite_orm"
 path = "examples/sqlite_orm/main.rs"
