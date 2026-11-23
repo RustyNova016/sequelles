@@ -1,6 +1,7 @@
 use deadpool::managed;
 use deadpool::managed::Object;
 use deadpool::managed::PoolError;
+use deadpool::managed::RecycleError;
 use sqlx::Connection as _;
 use sqlx::SqliteConnection;
 use sqlx::sqlite::SqliteConnectOptions;
@@ -36,7 +37,17 @@ impl managed::Manager for SqlitePoolManager {
         conn: &mut Self::Type,
         _: &managed::Metrics,
     ) -> managed::RecycleResult<Self::Error> {
-        Ok(conn.ping().await?)
+        // Is the connection alive?
+        conn.ping().await?;
+
+        // If in transaction, remove conn
+        if conn.is_in_transaction() {
+            return Err(RecycleError::message(
+                "Connection in transaction. Couldn't recycle it",
+            ));
+        }
+
+        Ok(())
     }
 }
 
